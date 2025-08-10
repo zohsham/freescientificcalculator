@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Free Scientific Calculator</title>
+<meta name="description" content="Free Scientific Calculator — dark theme, full scientific functions: trig (Deg/Rad/Grad), logs, roots, factorial, combinations, permutations, memory and more.">
+<meta name="keywords" content="scientific calculator online, free calculator, dark calculator, trig calculator, degree radian grad, logarithm, factorial, nCr, nPr, mathjs">
+<style>
+:root{--bg:#050506;--panel:#0b0f12;--card:#0f1418;--muted:#9aa5af;--accent:#1a73e8}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Arial;background:var(--bg);color:#e6eef6}
+.container{max-width:1000px;margin:18px auto;padding:18px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:20px;margin:0}
+.lead{color:var(--muted);margin:6px 0 12px}
+.calculator{background:linear-gradient(180deg,var(--card),#071018);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 40px rgba(0,0,0,0.6)}
+.top{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.modes{display:flex;gap:8px}
+.modes button{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer}
+.modes .active{background:var(--accent);border-color:var(--accent);color:#fff}
+.display{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);margin-top:12px}
+#expr{width:100%;background:transparent;border:0;color:var(--muted);outline:none;font-size:14px}
+#result{width:100%;text-align:right;font-size:30px;font-weight:700;color:#fff}
+.main{display:grid;grid-template-columns:1fr 340px;gap:14px;margin-top:14px}
+.pad{padding:8px}
+.keys{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.key{background:#0f1417;border:1px solid rgba(255,255,255,0.02);padding:12px;border-radius:8px;color:#e6eef6;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.key.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:500}
+.key.accent{background:linear-gradient(180deg,var(--accent),#1160d8);box-shadow:0 8px 18px rgba(26,115,232,0.18)}
+.key.wide{grid-column:span 2}
+.info{font-size:13px;color:var(--muted);margin-top:10px}
+footer{margin-top:12px;color:var(--muted);font-size:13px}
+@media (max-width:920px){.main{grid-template-columns:1fr}.keys{grid-template-columns:repeat(5,1fr)}.key.wide{grid-column:span 3}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Free Scientific Calculator","url":"https://yourwebsite.com/free-scientific-calculator","description":"Free online scientific calculator — dark theme with full scientific functions."}</script>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div>
+      <h1>Free Scientific Calculator</h1>
+      <div class="lead">Dark theme • Full scientific functions • Mobile friendly • No signup</div>
+    </div>
+    <div class="modes" role="navigation" aria-label="Angle mode">
+      <button id="degBtn" class="active" data-mode="deg">Deg</button>
+      <button id="radBtn" data-mode="rad">Rad</button>
+      <button id="gradBtn" data-mode="grad">Grad</button>
+    </div>
+  </header>
+
+  <main class="calculator" role="main" aria-label="Scientific calculator app">
+    <div class="display">
+      <input id="expr" placeholder="Enter expression, e.g. 2*(3+sin(30))" aria-label="Calculator expression" />
+      <div id="result">0</div>
+    </div>
+
+    <div class="main">
+      <div class="pad">
+        <div class="keys" id="keys">
+          <!-- Memory / Clear -->
+          <button class="key ghost" data-fn="mc">MC</button>
+          <button class="key ghost" data-fn="mr">MR</button>
+          <button class="key ghost" data-fn="mplus">M+</button>
+          <button class="key ghost" data-fn="mminus">M-</button>
+          <button class="key ghost" data-fn="ans">Ans</button>
+          <button class="key ghost" data-fn="ac">AC</button>
+
+          <!-- Trig -->
+          <button class="key" data-fn="sin">sin</button>
+          <button class="key" data-fn="cos">cos</button>
+          <button class="key" data-fn="tan">tan</button>
+          <button class="key" data-fn="asin">sin⁻¹</button>
+          <button class="key" data-fn="acos">cos⁻¹</button>
+          <button class="key" data-fn="atan">tan⁻¹</button>
+
+          <!-- Hyperbolic -->
+          <button class="key" data-fn="sinh">sinh</button>
+          <button class="key" data-fn="cosh">cosh</button>
+          <button class="key" data-fn="tanh">tanh</button>
+          <button class="key" data-fn="asinh">asinh</button>
+          <button class="key" data-fn="acosh">acosh</button>
+          <button class="key" data-fn="atanh">atanh</button>
+
+          <!-- Powers & Exp -->
+          <button class="key" data-fn="xpowy">xʸ</button>
+          <button class="key" data-fn="x3">x³</button>
+          <button class="key" data-fn="x2">x²</button>
+          <button class="key" data-fn="exp">eˣ</button>
+          <button class="key" data-fn="10pow">10ˣ</button>
+          <button class="key" data-fn="E">EXP</button>
+
+          <!-- Roots & logs -->
+          <button class="key" data-fn="yroot">y√x</button>
+          <button class="key" data-fn="cbrt">∛x</button>
+          <button class="key" data-fn="sqrt">√x</button>
+          <button class="key" data-fn="ln">ln</button>
+          <button class="key" data-fn="log10">log</button>
+          <button class="key" data-fn="gamma">Γ</button>
+
+          <!-- Misc functions -->
+          <button class="key" data-fn="pow">pow(</button>
+          <button class="key" data-fn="nCr">nCr</button>
+          <button class="key" data-fn="nPr">nPr</button>
+          <button class="key" data-fn="percent">%</button>
+          <button class="key" data-fn="recip">1/x</button>
+          <button class="key" data-fn="fact">n!</button>
+
+          <!-- Numbers & basic ops -->
+          <button class="key" data-val="7">7</button>
+          <button class="key" data-val="8">8</button>
+          <button class="key" data-val="9">9</button>
+          <button class="key" data-val="+">+</button>
+          <button class="key" data-fn="back">Back</button>
+          <button class="key" data-fn="rnd">RND</button>
+
+          <button class="key" data-val="4">4</button>
+          <button class="key" data-val="5">5</button>
+          <button class="key" data-val="6">6</button>
+          <button class="key" data-val="-">−</button>
+          <button class="key" data-fn="ans_use">Ans</button>
+          <button class="key" data-fn="sign">±</button>
+
+          <button class="key" data-val="1">1</button>
+          <button class="key" data-val="2">2</button>
+          <button class="key" data-val="3">3</button>
+          <button class="key" data-val="*">×</button>
+          <button class="key" data-fn="floor">floor</button>
+          <button class="key" data-fn="ceil">ceil</button>
+
+          <button class="key wide" data-val="0">0</button>
+          <button class="key" data-val=".">.</button>
+          <button class="key" data-val="/">÷</button>
+          <button class="key accent" data-fn="equals">=</button>
+        </div>
+      </div>
+
+      <aside class="pad" aria-label="Calculator info">
+        <div class="info">Memory: <strong id="memory">0</strong></div>
+        <div class="info">Mode: <strong id="modeLabel">Deg</strong></div>
+        <div class="info" id="err" style="color:#ff6b6b;min-height:18px"></div>
+
+        <h2 style="font-size:15px;margin-top:12px">About</h2>
+        <p class="info">This calculator uses <a href="https://mathjs.org/" style="color:var(--accent)">math.js</a> for parsing and evaluation. Trig functions obey the selected angle mode. It includes many advanced functions (gamma, combinations, permutations, hyperbolic functions, etc.).</p>
+
+        <footer>
+          <p class="info">&copy; <span id="year"></span> Free Scientific Calculator</p>
+        </footer>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<!-- mathjs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+<script>
+(function(){
+  const exprEl = document.getElementById('expr');
+  const resultEl = document.getElementById('result');
+  const keys = document.getElementById('keys');
+  const degBtn = document.getElementById('degBtn');
+  const radBtn = document.getElementById('radBtn');
+  const gradBtn = document.getElementById('gradBtn');
+  const modeLabel = document.getElementById('modeLabel');
+  const memoryEl = document.getElementById('memory');
+  const errEl = document.getElementById('err');
+
+  let memory = 0;
+  let lastAns = 0;
+  let angleMode = 'deg';
+
+  // add combinatorics helpers to mathjs
+  math.import({
+    comb: function(n,k){ n = Math.floor(n); k = Math.floor(k); if(k<0||k>n) return 0; return math.factorial(n) / (math.factorial(k)*math.factorial(n-k)); },
+    perm: function(n,k){ n = Math.floor(n); k = Math.floor(k); if(k<0||k>n) return 0; return math.factorial(n) / math.factorial(n-k); }
+  }, {override:true});
+
+  function setMode(m){
+    angleMode = m; modeLabel.textContent = m==='deg' ? 'Deg' : (m==='rad' ? 'Rad' : 'Grad');
+    degBtn.classList.toggle('active', m==='deg'); radBtn.classList.toggle('active', m==='rad'); gradBtn.classList.toggle('active', m==='grad');
+    installTrig(m);
+  }
+
+  function installTrig(mode){
+    const toRad = (x)=> mode==='deg' ? x * Math.PI/180 : (mode==='grad' ? x * Math.PI/200 : x);
+    const fromRad = (x)=> mode==='deg' ? x * 180/Math.PI : (mode==='grad' ? x * 200/Math.PI : x);
+    math.import({
+      sin: function(x){ return Math.sin(toRad(x)); },
+      cos: function(x){ return Math.cos(toRad(x)); },
+      tan: function(x){ return Math.tan(toRad(x)); },
+      asin: function(x){ return fromRad(Math.asin(x)); },
+      acos: function(x){ return fromRad(Math.acos(x)); },
+      atan: function(x){ return fromRad(Math.atan(x)); }
+    }, {override:true});
+  }
+
+  // useful math functions mapping
+  math.import({
+    cbrt: function(x){ return Math.cbrt(x); }
+  }, {override:true});
+
+  function insertAtCursor(text){ const v=exprEl.value; const s=exprEl.selectionStart||v.length; const e=exprEl.selectionEnd||v.length; exprEl.value = v.slice(0,s)+text+v.slice(e); exprEl.focus(); exprEl.selectionStart = exprEl.selectionEnd = s+text.length; }
+  function setError(msg){ errEl.textContent = msg||''; }
+  function updateMemory(){ memoryEl.textContent = String(memory); }
+
+  function backspace(){ const v=exprEl.value; const s=exprEl.selectionStart||v.length; const e=exprEl.selectionEnd||v.length; if(s===e){ exprEl.value = v.slice(0,s-1)+v.slice(e); exprEl.selectionStart=exprEl.selectionEnd=s-1; } else { exprEl.value = v.slice(0,s)+v.slice(e); exprEl.selectionStart=exprEl.selectionEnd=s; } exprEl.focus(); }
+  function clearAll(){ exprEl.value=''; resultEl.textContent='0'; lastAns=0; setError(''); }
+
+  function preprocess(raw){ return raw.replace(/π/g,'pi').replace(/×/g,'*').replace(/÷/g,'/').replace(/Ans/g,String(lastAns)).replace(/E/g,'e'); }
+
+  function evaluateExpression(){ setError(''); installTrig(angleMode); try{ let raw = preprocess(exprEl.value); // convert factorial shorthand like 5! is supported by mathjs
+      const res = math.evaluate(raw);
+      if(res===undefined){ resultEl.textContent='Error'; setError('Undefined result'); return; }
+      resultEl.textContent = (typeof res==='number' || typeof res==='string') ? String(res) : JSON.stringify(res);
+      lastAns = (typeof res==='number') ? res : Number(res)||lastAns;
+    }catch(err){ resultEl.textContent='Error'; setError(err.toString()); }
+  }
+
+  function handleFn(fn){ setError(''); switch(fn){
+    case 'mc': memory=0; updateMemory(); break; case 'mr': insertAtCursor(String(memory)); break; case 'mplus': memory += (Number(lastAns)||0); updateMemory(); break; case 'mminus': memory -= (Number(lastAns)||0); updateMemory(); break;
+    case 'ans': insertAtCursor(String(lastAns)); break; case 'ans_use': insertAtCursor('Ans'); break; case 'ac': clearAll(); break; case 'back': backspace(); break; case 'equals': evaluateExpression(); break;
+
+    case 'sin': insertAtCursor('sin('); break; case 'cos': insertAtCursor('cos('); break; case 'tan': insertAtCursor('tan('); break; case 'asin': insertAtCursor('asin('); break; case 'acos': insertAtCursor('acos('); break; case 'atan': insertAtCursor('atan('); break;
+    case 'sinh': insertAtCursor('sinh('); break; case 'cosh': insertAtCursor('cosh('); break; case 'tanh': insertAtCursor('tanh('); break; case 'asinh': insertAtCursor('asinh('); break; case 'acosh': insertAtCursor('acosh('); break; case 'atanh': insertAtCursor('atanh('); break;
+
+    case 'xpowy': insertAtCursor('^'); break; case 'x3': insertAtCursor('^3'); break; case 'x2': insertAtCursor('^2'); break; case 'exp': insertAtCursor('exp('); break; case '10pow': insertAtCursor('10^'); break; case 'E': insertAtCursor('E'); break;
+
+    case 'yroot': insertAtCursor('root('); break; case 'cbrt': insertAtCursor('cbrt('); break; case 'sqrt': insertAtCursor('sqrt('); break; case 'ln': insertAtCursor('ln('); break; case 'log10': insertAtCursor('log10('); break; case 'gamma': insertAtCursor('gamma('); break;
+
+    case 'pow': insertAtCursor('pow('); break; case 'nCr': insertAtCursor('comb('); break; case 'nPr': insertAtCursor('perm('); break; case 'percent': insertAtCursor('%'); break; case 'recip': insertAtCursor('1/('); break; case 'fact': insertAtCursor('!'); break;
+
+    case 'rnd': insertAtCursor('random()'); break; case 'sign': insertAtCursor('-('); break; case 'floor': insertAtCursor('floor('); break; case 'ceil': insertAtCursor('ceil('); break;
+  } }
+
+  keys.addEventListener('click', function(e){ const btn = e.target.closest('button'); if(!btn) return; const val = btn.getAttribute('data-val'); const fn = btn.getAttribute('data-fn'); if(val) { insertAtCursor(val); return; } if(fn) { handleFn(fn); } });
+
+  document.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); evaluateExpression(); } if(e.key==='Escape'){ clearAll(); } if(/^[-+*/^%().0-9E]$/.test(e.key) || e.key==='.' ){ insertAtCursor(e.key); } });
+
+  degBtn.addEventListener('click', ()=> setMode('deg'));
+  radBtn.addEventListener('click', ()=> setMode('rad'));
+  gradBtn.addEventListener('click', ()=> setMode('grad'));
+
+  // init
+  setMode('deg'); updateMemory(); document.getElementById('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
